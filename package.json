@@ -1,0 +1,19 @@
+{
+  "name": "@observablehq/framework-runtime",
+  "license": "ISC",
+  "version": "0.0.0",
+  "description": "Environment for Observable Framework projects to be built in",
+  "type": "module",
+  "scripts": {
+    "build": "docker build . -t observablehq/framework-runtime:latest",
+    "test": "node --import tsx/esm --test ./test.ts"
+  },
+  "packageManager": "yarn@4.1.1",
+  "devDependencies": {
+    "@types/node": "^20",
+    "dockerode": "^4.0.2",
+    "semver": "^7.6.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.3"
+  }
+}
