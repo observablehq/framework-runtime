@@ -34,7 +34,8 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-python \
 FROM base AS r
 COPY r-project.gpg /etc/apt/keyrings/r-project.gpg
 COPY <<EOF /etc/apt/sources.list.d/r-project.list
-deb [signed-by=/etc/apt/keyrings/r-project.gpg] http://cloud.r-project.org/bin/linux/debian bookworm-cran40/
+deb [signed-by=/etc/apt/keyrings/r-project.gpg] https://cloud.r-project.org/bin/linux/debian bookworm-cran40/
+deb-src [signed-by=/etc/apt/keyrings/r-project.gpg] https://cloud.r-project.org/bin/linux/debian bookworm-cran40/
 EOF
 RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-r \
     apt update \
