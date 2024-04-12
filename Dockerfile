@@ -45,10 +45,16 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-r \
 
 # == duckdb ======================
 FROM base AS duckdb
-RUN cd $(mktemp -d) \
-    && wget https://github.com/duckdb/duckdb/releases/download/v0.10.1/duckdb_cli-linux-amd64.zip \
-    && unzip duckdb_cli-linux-amd64.zip \
-    && install -m 0755 duckdb /usr/bin/duckdb
+RUN cd $(mktemp -d); \
+    dpkgArch="$(dpkg --print-architecture)"; \
+    case "${dpkgArch##*-}" in \
+        amd64) duckdbArch='amd64' ;; \
+        arm64) duckdbArch='aarch64' ;; \
+        *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
+    esac; \
+    wget https://github.com/duckdb/duckdb/releases/download/v0.10.1/duckdb_cli-linux-${duckdbArch}.zip; \
+    unzip duckdb_cli-linux-${duckdbArch}.zip; \
+    install -m 0755 duckdb /usr/bin/duckdb;
 
 # == rust ========================
 FROM base AS rust
