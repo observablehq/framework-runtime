@@ -1,0 +1,15 @@
+import { binaryOnPathTest, binaryVersionTest } from "./index.ts";
+
+const dataManipTools = [
+  { binary: "jq" },
+  { binary: "in2csv", name: "csvkit" },
+  { binary: "csv2parquet" },
+];
+
+dataManipTools.map(binaryOnPathTest);
+
+binaryVersionTest({
+  binary: "duckdb",
+  semver: "^0.10.1",
+  extract: /^v(.*) [0-9a-f]*$/,
+});
