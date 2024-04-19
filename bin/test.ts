@@ -6,7 +6,6 @@ import { run as runTests } from "node:test";
 import { spec } from "node:test/reporters";
 
 export async function buildTestImage() {
-  // TODO dockerode uses the HTTP API which doesn't support buildx, so do it with exec instead.
   console.log("building image...");
   let stdio = new StringStream();
   let process = spawn("docker", ["buildx", "build", "-t", IMAGE_TAG, ".."], {
