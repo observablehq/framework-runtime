@@ -25,6 +25,11 @@ const dataLoaderLanguages = [
     semver: "^0.34",
     prefix: "rust-script",
   },
+  {
+    binary: "perl",
+    semver: "^5.36",
+    extract: /^This is perl 5,[^(]* \(([^)]+)\)/,
+  },
 ];
 
 dataLoaderLanguages.forEach(binaryVersionTest);
