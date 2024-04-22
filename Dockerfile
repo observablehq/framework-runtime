@@ -18,6 +18,7 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-node \
     apt update \
     && apt install -y --no-install-recommends nodejs \
     && npm install --global yarn
+RUN npm install --global svgo
 
 # == python ======================
 FROM base AS python
@@ -59,6 +60,7 @@ RUN cd $(mktemp -d); \
 # == rust ========================
 FROM base AS rust
 # Based on https://github.com/rust-lang/docker-rust/blob/c8d1e4f5c563dacb16b2aadf827f1be3ff3ac25b/1.77.0/bookworm/Dockerfile
+# Install rustup, and then use that to install Rust
 RUN set -eux; \
     dpkgArch="$(dpkg --print-architecture)"; \
     case "${dpkgArch##*-}" in \
@@ -73,10 +75,45 @@ RUN set -eux; \
     ./rustup-init -y --no-modify-path --profile minimal --default-toolchain $RUST_VERSION --default-host ${rustArch}; \
     rm rustup-init; \
     chmod -R a+w $RUSTUP_HOME $CARGO_HOME;
-RUN cargo install rust-script
+# Install cargo-binstall, which looks for precompiled binaries of libraries instead of building them here
+RUN set -eux; \
+    dpkgArch="$(dpkg --print-architecture)"; \
+    case "${dpkgArch##*-}" in \
+        amd64) binstallArch='x86_64-unknown-linux-gnu' ;; \
+        arm64) binstallArch='aarch64-unknown-linux-gnu' ;; \
+        *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
+    esac; \
+    url="https://github.com/cargo-bins/cargo-binstall/releases/download/v1.6.4/cargo-binstall-${binstallArch}.tgz"; \
+    curl -L --proto '=https' --tlsv1.2 -sSf "$url" | tar -xvzf -; \
+    ./cargo-binstall -y --force cargo-binstall
+# rust-script is what Framework uses to run Rust data loaders
+RUN cargo binstall -y --force rust-script
+# all the apache arrow-tools
+RUN cargo binstall -y --force csv2arrow csv2parquet json2arrow json2parquet 
+
+# == general-cli =================
+FROM base AS general-cli
+RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-general-cli \
+    set -eux; \
+    apt update; \
+    apt install -y --no-install-recommends \
+        bind9-dnsutils \
+        csvkit \
+        iputils-ping \
+        iputils-tracepath \
+        jq \
+        nano \
+        netcat-openbsd \
+        openssl \
+        optipng \
+        ripgrep \
+        silversearcher-ag \
+        vim \
+        zstd
 
 # == runtime =====================
 FROM base AS runtime
+COPY --from=general-cli . .
 COPY --from=node . .
 COPY --from=python . .
 COPY --from=r . .
