@@ -10,4 +10,4 @@ const generalCliTools: { binary: string }[] = [
   { binary: "vmstat" },
 ];
 
-generalCliTools.map(binaryOnPathTest);
+generalCliTools.forEach(binaryOnPathTest);

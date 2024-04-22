@@ -6,4 +6,4 @@ const imageTools = [
   { binary: "convert", name: "imagemagick" },
 ];
 
-imageTools.map(binaryOnPathTest);
+imageTools.forEach(binaryOnPathTest);

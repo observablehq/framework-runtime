@@ -27,4 +27,4 @@ const dataLoaderLanguages = [
   },
 ];
 
-dataLoaderLanguages.map(binaryVersionTest);
+dataLoaderLanguages.forEach(binaryVersionTest);

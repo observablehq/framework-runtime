@@ -12,4 +12,4 @@ const textManipTools: { binary: string }[] = [
   { binary: "vim" },
 ];
 
-textManipTools.map(binaryOnPathTest);
+textManipTools.forEach(binaryOnPathTest);

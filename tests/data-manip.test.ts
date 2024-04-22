@@ -6,7 +6,7 @@ const dataManipTools = [
   { binary: "csv2parquet" },
 ];
 
-dataManipTools.map(binaryOnPathTest);
+dataManipTools.forEach(binaryOnPathTest);
 
 binaryVersionTest({
   binary: "duckdb",

@@ -10,4 +10,4 @@ const networkingTools = [
   { binary: "wget" },
 ];
 
-networkingTools.map(binaryOnPathTest);
+networkingTools.forEach(binaryOnPathTest);

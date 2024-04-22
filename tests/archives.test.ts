@@ -8,4 +8,4 @@ const archiveTools = [
   { binary: "zstd" },
 ];
 
-archiveTools.map(binaryOnPathTest);
+archiveTools.forEach(binaryOnPathTest);
