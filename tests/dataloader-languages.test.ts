@@ -1,7 +1,7 @@
 import { binaryVersionTest } from "./index.ts";
 
 const dataLoaderLanguages = [
-  { binary: "node", semver: "^20" },
+  { binary: "node", semver: "^20.17" },
   { binary: "npm", semver: "^10.5" },
   { binary: "yarn", semver: "^1.22" },
   {
@@ -11,18 +11,18 @@ const dataLoaderLanguages = [
   },
   {
     binary: "Rscript",
-    semver: "^4.3",
+    semver: "^4.4.1",
     extract: /^Rscript \(R\) version ([^\s]+)/,
   },
   {
     name: "Rust",
     binary: "cargo",
-    semver: "^1.77",
+    semver: "^1.81",
     extract: /^cargo ([\d.]+)/,
   },
   {
     binary: "rust-script",
-    semver: "^0.34",
+    semver: "^0.35",
     prefix: "rust-script",
   },
   {

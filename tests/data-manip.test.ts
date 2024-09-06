@@ -10,6 +10,6 @@ dataManipTools.forEach(binaryOnPathTest);
 
 binaryVersionTest({
   binary: "duckdb",
-  semver: "^0.10.1",
+  semver: "^1",
   extract: /^v(.*) [0-9a-f]*$/,
 });
