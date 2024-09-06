@@ -1,12 +1,13 @@
 # == base ======================
 FROM buildpack-deps:bookworm AS base
+ENV CACHEBUST=2024-09-06
 RUN apt update
 
 # Rust envvars
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
-    RUST_VERSION=1.77.0
+    RUST_VERSION=1.81.0
 
 # == node ======================
 FROM base AS node
@@ -48,12 +49,13 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-r \
 FROM base AS duckdb
 RUN cd $(mktemp -d); \
     dpkgArch="$(dpkg --print-architecture)"; \
+    version=1.0.0; \
     case "${dpkgArch##*-}" in \
         amd64) duckdbArch='amd64' ;; \
         arm64) duckdbArch='aarch64' ;; \
         *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
     esac; \
-    wget https://github.com/duckdb/duckdb/releases/download/v0.10.1/duckdb_cli-linux-${duckdbArch}.zip; \
+    wget https://github.com/duckdb/duckdb/releases/download/v${version}/duckdb_cli-linux-${duckdbArch}.zip; \
     unzip duckdb_cli-linux-${duckdbArch}.zip; \
     install -m 0755 duckdb /usr/bin/duckdb;
 
@@ -89,7 +91,7 @@ RUN set -eux; \
 # rust-script is what Framework uses to run Rust data loaders
 RUN cargo binstall -y --force rust-script
 # all the apache arrow-tools
-RUN cargo binstall -y --force csv2arrow csv2parquet json2arrow json2parquet 
+RUN cargo binstall -y --force csv2arrow csv2parquet json2arrow json2parquet
 
 # == general-cli =================
 FROM base AS general-cli
