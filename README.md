@@ -6,9 +6,10 @@ It includes support for running Framework data loaders with the following langua
 
 - Node 20
 - Python 3.11
-- R 4.3
-- duckdb 0.10.1
-- Rust 1.77
+- R 4.4
+- duckdb 1.0
+- Rust 1.81
+- Perl 5.36
 
 ## Usage
 
@@ -28,7 +29,7 @@ This will install dependencies needed for the repository, and build the image.
 To run the image, you can use the command
 
 ```
-docker run -it observablehq/framework-runtime:latest bash
+docker run -it ghcr.io/observablehq/framework-runtime:latest bash
 ```
 
 This will launch a shell in the runtime environment. From here you should be able to clone repositories, use `npm init @observablehq`, and otherwise interact with Framework projects. Not that after exiting the shell any files you worked with will be lost. Consider using [Docker Volumes](https://docs.docker.com/storage/volumes/) if you want a persistent environment.
