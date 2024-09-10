@@ -97,8 +97,11 @@ export async function runCommandInContainer(
   docker.modem.demuxStream(attach, stdout, stderr);
   await container.start();
   const wait = (await container.wait()) as { StatusCode: number };
-  if (wait.StatusCode !== 0)
-    throw new Error(`Command failed with status code ${wait.StatusCode}`);
+  if (wait.StatusCode !== 0) {
+    throw new Error(`Command failed with status code ${wait.StatusCode}\n` +
+      `stdout:\n${stdout}\n\n` +
+      `stderr:\n${stderr}`);
+  }
   return { stdout: stdout.string, stderr: stderr.string };
 }
 
