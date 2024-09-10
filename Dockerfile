@@ -19,8 +19,8 @@ EOF
 RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-node \
     apt update \
     && apt install -y --no-install-recommends nodejs \
-    && npm install --global yarn
-RUN npm install --global svgo
+    && corepack enable \
+    && npm install --global svgo
 
 # == python ======================
 FROM base AS python
