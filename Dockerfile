@@ -7,8 +7,8 @@ RUN apt update
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     RUST_VERSION=1.81.0 \
-    VIRTUAL_ENV=/var/local/python-venv \
-    PATH=/usr/local/cargo/bin:$VIRTUAL_ENV:$PATH
+    VIRTUAL_ENV=/var/local/python-venv
+ENV PATH=/usr/local/cargo/bin:$VIRTUAL_ENV/bin:$PATH
 
 # == node ======================
 FROM base AS node
