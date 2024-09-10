@@ -20,6 +20,7 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-node \
     apt update \
     && apt install -y --no-install-recommends nodejs \
     && corepack enable \
+    && corepack enable pnpm \
     && npm install --global svgo
 
 # == python ======================

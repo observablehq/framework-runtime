@@ -47,7 +47,7 @@ export function binaryOnPathTest({
   });
 }
 
-function assertSemver(
+export function assertSemver(
   actual: string,
   expected: string,
   {
