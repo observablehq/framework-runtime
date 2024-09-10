@@ -99,8 +99,8 @@ export async function runCommandInContainer(
   const wait = (await container.wait()) as { StatusCode: number };
   if (wait.StatusCode !== 0) {
     throw new Error(`Command failed with status code ${wait.StatusCode}\n` +
-      `stdout:\n${stdout}\n\n` +
-      `stderr:\n${stderr}`);
+      `stdout:\n${stdout.string}\n\n` +
+      `stderr:\n${stderr.string}`);
   }
   return { stdout: stdout.string, stderr: stderr.string };
 }
