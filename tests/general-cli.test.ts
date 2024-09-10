@@ -1,3 +1,4 @@
+import { describe } from "node:test";
 import { binaryOnPathTest } from "./index.ts";
 
 const generalCliTools: { binary: string }[] = [
@@ -10,4 +11,6 @@ const generalCliTools: { binary: string }[] = [
   { binary: "vmstat" },
 ];
 
-generalCliTools.forEach(binaryOnPathTest);
+describe("General CLI tools", () => {
+  generalCliTools.forEach(binaryOnPathTest);
+});

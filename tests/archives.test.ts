@@ -1,3 +1,4 @@
+import { describe } from "node:test";
 import { binaryOnPathTest } from "./index.ts";
 
 const archiveTools = [
@@ -8,4 +9,6 @@ const archiveTools = [
   { binary: "zstd" },
 ];
 
-archiveTools.forEach(binaryOnPathTest);
+await describe("Archive tools", () => {
+  archiveTools.forEach(binaryOnPathTest);
+});
