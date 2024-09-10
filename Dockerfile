@@ -6,8 +6,9 @@ RUN apt update
 # Rust envvars
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
-    PATH=/usr/local/cargo/bin:$PATH \
-    RUST_VERSION=1.81.0
+    RUST_VERSION=1.81.0 \
+    VIRTUAL_ENV=/var/local/python-venv \
+    PATH=/usr/local/cargo/bin:$VIRTUAL_ENV:$PATH
 
 # == node ======================
 FROM base AS node
@@ -30,7 +31,8 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-python \
       python3-setuptools \
       python3-wheel \
       python3-dev \
-      python3-venv
+      python3-venv \
+    && python3 -m venv /var/local/python-venv
 
 # == R ===========================
 FROM base AS r

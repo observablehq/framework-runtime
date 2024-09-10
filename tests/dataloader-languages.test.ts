@@ -1,4 +1,5 @@
-import { binaryVersionTest } from "./index.ts";
+import { test } from "node:test";
+import { binaryVersionTest, runCommandInContainer } from "./index.ts";
 
 const dataLoaderLanguages = [
   { binary: "node", semver: "^20.17" },
@@ -33,3 +34,8 @@ const dataLoaderLanguages = [
 ];
 
 dataLoaderLanguages.forEach(binaryVersionTest);
+
+await test(`A Python virtual environment is activated`, async () => {
+  // should not throw
+  await runCommandInContainer(["pip", "install", "requests"]);
+});
