@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-python \
       python3-wheel \
       python3-dev \
       python3-venv \
-    && python3 -m venv /var/local/python-venv
+    && python3 -m venv $VIRTUAL_ENV
 
 # == R ===========================
 FROM base AS r
