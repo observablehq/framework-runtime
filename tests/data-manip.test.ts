@@ -1,3 +1,4 @@
+import { describe } from "node:test";
 import { binaryOnPathTest, binaryVersionTest } from "./index.ts";
 
 const dataManipTools = [
@@ -6,10 +7,12 @@ const dataManipTools = [
   { binary: "csv2parquet" },
 ];
 
-dataManipTools.forEach(binaryOnPathTest);
+describe("Data manipulation tools", () => {
+  dataManipTools.forEach(binaryOnPathTest);
 
-binaryVersionTest({
-  binary: "duckdb",
-  semver: "^1",
-  extract: /^v(.*) [0-9a-f]*$/,
+  binaryVersionTest({
+    binary: "duckdb",
+    semver: "^1",
+    extract: /^v(.*) [0-9a-f]*$/,
+  });
 });

@@ -1,3 +1,4 @@
+import { describe } from "node:test";
 import { binaryOnPathTest } from "./index.ts";
 
 const networkingTools = [
@@ -10,4 +11,6 @@ const networkingTools = [
   { binary: "wget" },
 ];
 
-networkingTools.forEach(binaryOnPathTest);
+describe("Networking tools", () => {
+  networkingTools.forEach(binaryOnPathTest);
+});

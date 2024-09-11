@@ -1,3 +1,4 @@
+import { describe } from "node:test";
 import { binaryOnPathTest } from "./index.ts";
 
 const textManipTools: { binary: string }[] = [
@@ -13,4 +14,6 @@ const textManipTools: { binary: string }[] = [
   { binary: "vim" },
 ];
 
-textManipTools.forEach(binaryOnPathTest);
+describe("editing tools", () => {
+  textManipTools.forEach(binaryOnPathTest);
+});

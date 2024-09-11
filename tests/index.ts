@@ -13,18 +13,20 @@ export interface AssertBinaryVersionOptions {
   semver: string;
   extract?: RegExp;
   prefix?: string;
+  expectStderr?: RegExp;
 }
 
-export function binaryVersionTest({
+export async function binaryVersionTest({
   binary,
   name = binary,
   semver,
   extract,
   prefix,
+  expectStderr = /^$/,
 }: AssertBinaryVersionOptions) {
-  test(`${name} ${semver} is available`, async () => {
+  await test(`${name} ${semver} is available`, async () => {
     const res = await runCommandInContainer([binary, "--version"]);
-    assert.equal(res.stderr, "");
+    assert.ok(res.stderr.match(expectStderr), `Expected stderr to match, got: ${res.stderr}`);
     assertSemver(res.stdout, semver, { extract, prefix });
   });
 }
@@ -45,9 +47,9 @@ export function binaryOnPathTest({
   });
 }
 
-function assertSemver(
-  actual,
-  expected,
+export function assertSemver(
+  actual: string,
+  expected: string,
   {
     prefix,
     suffix,

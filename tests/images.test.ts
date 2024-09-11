@@ -1,3 +1,4 @@
+import { describe } from "node:test";
 import { binaryOnPathTest } from "./index.ts";
 
 const imageTools = [
@@ -6,4 +7,6 @@ const imageTools = [
   { binary: "convert", name: "imagemagick" },
 ];
 
-imageTools.forEach(binaryOnPathTest);
+describe("Image tools", () => {
+  imageTools.forEach(binaryOnPathTest);
+});
