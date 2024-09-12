@@ -3,12 +3,11 @@ FROM buildpack-deps:bookworm AS base
 ENV CACHEBUST=2024-09-06
 RUN apt update
 
-# Rust envvars
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     RUST_VERSION=1.81.0 \
     VIRTUAL_ENV=/var/local/python-venv
-ENV PATH=/usr/local/cargo/bin:$VIRTUAL_ENV/bin:$PATH
+ENV PATH=/usr/local/cargo/bin:$VIRTUAL_ENV/bin:/root/.local/bin:$PATH
 
 # == node ======================
 FROM base AS node
@@ -33,6 +32,8 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-python \
       python3-wheel \
       python3-dev \
       python3-venv \
+      pipx \
+    && pipx install poetry \
     && python3 -m venv $VIRTUAL_ENV
 
 # == R ===========================
