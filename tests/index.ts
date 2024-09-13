@@ -1,4 +1,5 @@
 import { test, before } from "node:test";
+import { resolve } from "node:path";
 import assert from "node:assert";
 import Dockerode from "dockerode";
 import { Stream } from "node:stream";
@@ -13,6 +14,7 @@ export interface AssertBinaryVersionOptions {
   semver: string;
   extract?: RegExp;
   prefix?: string;
+  suffix?: string;
   expectStderr?: RegExp;
 }
 
@@ -22,12 +24,16 @@ export async function binaryVersionTest({
   semver,
   extract,
   prefix,
+  suffix,
   expectStderr = /^$/,
 }: AssertBinaryVersionOptions) {
   await test(`${name} ${semver} is available`, async () => {
     const res = await runCommandInContainer([binary, "--version"]);
-    assert.ok(res.stderr.match(expectStderr), `Expected stderr to match, got: ${res.stderr}`);
-    assertSemver(res.stdout, semver, { extract, prefix });
+    assert.ok(
+      res.stderr.match(expectStderr),
+      `Expected stderr to match, got: ${res.stderr}`,
+    );
+    assertSemver(res.stdout, semver, { extract, prefix, suffix });
   });
 }
 
@@ -54,7 +60,7 @@ export function assertSemver(
     prefix,
     suffix,
     extract,
-  }: { prefix?: string; suffix?: string; extract?: RegExp } = {}
+  }: { prefix?: string; suffix?: string; extract?: RegExp } = {},
 ) {
   actual = actual.trim();
   if (prefix && actual.startsWith(prefix)) actual = actual.slice(prefix.length);
@@ -70,7 +76,7 @@ export function assertSemver(
   actual = actual.trim();
   assert.ok(
     semverSatisfies(actual, expected),
-    `Expected semver match for ${expected}, got ${actual}`
+    `Expected semver match for ${expected}, got ${JSON.stringify(actual)}`,
   );
 }
 
@@ -82,12 +88,26 @@ function ensureDocker() {
 before(ensureDocker);
 
 export async function runCommandInContainer(
-  command: string[]
+  command: string[],
+  {
+    mounts = [],
+    workingDir = "/",
+  }: {
+    mounts?: { host: string; container: string}[];
+    workingDir?: string;
+  } = {},
 ): Promise<{ stdout: string; stderr: string }> {
   const docker = ensureDocker();
   const container = await docker.createContainer({
+    WorkingDir: workingDir,
     Image: IMAGE_TAG,
     Cmd: command,
+    HostConfig: {
+      Binds: mounts.map(
+        ({ host, container }) =>
+          `${resolve(host)}:${container}`,
+      ),
+    },
   });
   const stdout = new StringStream();
   const stderr = new StringStream();
@@ -100,9 +120,11 @@ export async function runCommandInContainer(
   await container.start();
   const wait = (await container.wait()) as { StatusCode: number };
   if (wait.StatusCode !== 0) {
-    throw new Error(`Command failed with status code ${wait.StatusCode}\n` +
-      `stdout:\n${stdout.string}\n\n` +
-      `stderr:\n${stderr.string}`);
+    throw new Error(
+      `Command failed with status code ${wait.StatusCode}\n` +
+        `stdout:\n${stdout.string}\n\n` +
+        `stderr:\n${stderr.string}`,
+    );
   }
   return { stdout: stdout.string, stderr: stderr.string };
 }

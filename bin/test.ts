@@ -5,6 +5,13 @@ import { dirname } from "node:path";
 import { run as runTests } from "node:test";
 import { spec } from "node:test/reporters";
 
+import { parseArgs } from "node:util";
+const { values: { "only": argOnly } } = parseArgs({
+  options: {
+    "only": { type: "boolean" },
+  }
+});
+
 export async function buildTestImage() {
   console.log("building image...");
   let stdio = new StringStream();
@@ -34,7 +41,7 @@ const files = await glob(["tests/**/*.test.ts"], {
 });
 
 await buildTestImage();
-runTests({ files, concurrency: true })
+runTests({ files, concurrency: true, only: argOnly })
   .on("test:fail", () => {
     process.exitCode = 1;
   })
