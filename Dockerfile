@@ -125,3 +125,6 @@ COPY --from=python . .
 COPY --from=r . .
 COPY --from=duckdb . .
 COPY --from=rust . .
+RUN mkdir /project && useradd -m -d /project -u 8000 observable-builder && chown 8000:8000 /project
+WORKDIR /project
+USER 8000:8000
