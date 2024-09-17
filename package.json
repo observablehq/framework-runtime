@@ -12,10 +12,14 @@
   "devDependencies": {
     "@types/dockerode": "^3.3.28",
     "@types/node": "^20",
+    "@types/tar-fs": "^2.0.4",
     "dockerode": "^4.0.2",
     "glob": "^10.3.12",
     "semver": "^7.6.0",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "tar-fs": "^3.0.6"
   }
 }
