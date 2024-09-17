@@ -107,7 +107,7 @@ export async function runCommandInContainer(
       GroupAdd: addGids,
       Binds: mounts.map(
         ({ host, container }) =>
-          `${resolve(host)}:${container}`,
+          `${resolve(host)}:${container}:z`,
       ),
     },
   });
