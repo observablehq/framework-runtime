@@ -71,34 +71,21 @@ describe("Dataloader languages", () => {
     });
 
     test(`Poetry can install dependencies in the virtualenv`, async () => {
-      let testDir = await mkdtemp(join(os.tmpdir(), "poetry-test-"));
-      try {
-        // This will install dependencies using Poetry, and then try to run `ls`
-        // in the installed dependency's package. If the package is not
-        // installed here, the `ls` command will exit non-zero and
-        // `runCommandInContainer` will throw.
-        await cp(
-          "./tests/fixtures/poetry-test/pyproject.toml",
-          `${testDir}/pyproject.toml`,
-        );
-        let res = await runCommandInContainer(
-          [
-            "sh",
-            "-c",
-            "poetry install; ls $(poetry env info --path)/lib/python3.11/site-packages/pip_install_test/__init__.py",
-          ],
-          {
-            workingDir: "/project/poetry-test",
-            mounts: [{ host: testDir, container: "/project/poetry-test" }],
-          },
-        );
-      } finally {
-        try {
-          await rm(testDir, { recursive: true });
-        } catch {
-          /* ok */
-        }
-      }
+      // This will install dependencies using Poetry, and then try to run `ls`
+      // in the installed dependency's package. If the package is not
+      // installed here, the `ls` command will exit non-zero and
+      // `runCommandInContainer` will throw.
+      let res = await runCommandInContainer(
+        [
+          "sh",
+          "-c",
+          "poetry install; ls $(poetry env info --path)/lib/python3.11/site-packages/pip_install_test/__init__.py",
+        ],
+        {
+          workingDir: "/project/poetry-test",
+          mounts: [{ host: "./tests/fixtures/poetry-test", container: "/project/poetry-test" }],
+        },
+      );
     });
   });
 
