@@ -91,7 +91,7 @@ export async function runCommandInContainer(
   command: string[],
   {
     mounts = [],
-    workingDir = "/",
+    workingDir = "/project",
   }: {
     mounts?: { host: string; container: string}[];
     workingDir?: string;

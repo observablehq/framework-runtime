@@ -88,8 +88,8 @@ describe("Dataloader languages", () => {
             "poetry install; ls $(poetry env info --path)/lib/python3.11/site-packages/pip_install_test/__init__.py",
           ],
           {
-            workingDir: "/poetry-test",
-            mounts: [{ host: testDir, container: "/poetry-test" }],
+            workingDir: "/project/poetry-test",
+            mounts: [{ host: testDir, container: "/project/poetry-test" }],
           },
         );
       } finally {
