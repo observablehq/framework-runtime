@@ -16,10 +16,8 @@
     "dockerode": "^4.0.2",
     "glob": "^10.3.12",
     "semver": "^7.6.0",
+    "tar-fs": "^3.0.6",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
-  },
-  "dependencies": {
-    "tar-fs": "^3.0.6"
   }
 }

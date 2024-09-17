@@ -83,7 +83,7 @@ describe("Dataloader languages", () => {
         ],
         {
           workingDir: "/project/poetry-test",
-          mounts: [{ host: "./tests/fixtures/poetry-test", container: "/project/poetry-test" }],
+          hostContainerDirs: [{ host: "./tests/fixtures/poetry-test", container: "/project/poetry-test" }],
         },
       );
     });

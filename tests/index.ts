@@ -1,12 +1,9 @@
 import { test, before } from "node:test";
-import { resolve } from "node:path";
 import assert from "node:assert";
 import Dockerode from "dockerode";
 import { Stream } from "node:stream";
 import semverSatisfies from "semver/functions/satisfies";
-import { basename } from "node:path";
 import tar from "tar-fs";
-import { readFileSync } from "node:fs";
 
 export const IMAGE_TAG = "observablehq/framework-runtime:test";
 
@@ -91,9 +88,9 @@ before(ensureDocker);
 
 function copyFilesToContainer(
   dockerContainer: Dockerode.Container,
-  files: { host: string; container: string }[],
+  directories: { host: string; container: string }[],
 ) {
-  for (const { host, container } of files) {
+  for (const { host, container } of directories) {
     const tarStream = tar.pack(host);
     dockerContainer.putArchive(tarStream, { path: container });
   }
@@ -102,10 +99,10 @@ function copyFilesToContainer(
 export async function runCommandInContainer(
   command: string[],
   {
-    mounts = [],
+    hostContainerDirs = [],
     workingDir = "/project",
   }: {
-    mounts?: { host: string; container: string}[];
+    hostContainerDirs?: { host: string; container: string}[];
     workingDir?: string;
   } = {},
 ): Promise<{ stdout: string; stderr: string }> {
@@ -116,7 +113,7 @@ export async function runCommandInContainer(
     Cmd: command,
   });
 
-  copyFilesToContainer(container, mounts);
+  copyFilesToContainer(container, hostContainerDirs);
 
   const stdout = new StringStream();
   const stderr = new StringStream();
