@@ -98,11 +98,13 @@ export async function runCommandInContainer(
   } = {},
 ): Promise<{ stdout: string; stderr: string }> {
   const docker = ensureDocker();
+  const addGids = process.getgid ? [String(process.getgid())] : [];
   const container = await docker.createContainer({
     WorkingDir: workingDir,
     Image: IMAGE_TAG,
     Cmd: command,
     HostConfig: {
+      GroupAdd: addGids,
       Binds: mounts.map(
         ({ host, container }) =>
           `${resolve(host)}:${container}`,
