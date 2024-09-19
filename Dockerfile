@@ -1,13 +1,14 @@
 # == base ======================
 FROM buildpack-deps:bookworm AS base
-ENV CACHEBUST=2024-09-06
-RUN apt update
+ENV CACHEBUST=2024-09-17
+RUN useradd -m -u 8000 observable-builder && mkdir /project && \
+    chown 8000:8000 /project && apt update
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     RUST_VERSION=1.81.0 \
-    VIRTUAL_ENV=/var/local/python-venv
-ENV PATH=/usr/local/cargo/bin:$VIRTUAL_ENV/bin:/root/.local/bin:$PATH
+    VIRTUAL_ENV=/home/observable-builder/.local/python-venv
+ENV PATH=/usr/local/cargo/bin:$VIRTUAL_ENV/bin:/home/observable-builder/.local/bin:$PATH
 
 # == node ======================
 FROM base AS node
@@ -32,8 +33,9 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-python \
       python3-wheel \
       python3-dev \
       python3-venv \
-      pipx \
-    && pipx install poetry \
+      pipx
+USER 8000
+RUN pipx install poetry \
     && python3 -m venv $VIRTUAL_ENV
 
 # == R ===========================
@@ -125,3 +127,5 @@ COPY --from=python . .
 COPY --from=r . .
 COPY --from=duckdb . .
 COPY --from=rust . .
+USER 8000:8000
+WORKDIR /project
