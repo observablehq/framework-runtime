@@ -1,8 +1,8 @@
 # == base ======================
 FROM buildpack-deps:bookworm AS base
 ENV CACHEBUST=2024-09-17
-RUN useradd -m -u 8000 observable-builder && mkdir /project && \
-    chown 8000:8000 /project && apt update
+RUN useradd -m -u 1000 observable-builder && mkdir /project && \
+    chown 1000:1000 /project && apt update
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
@@ -34,7 +34,7 @@ RUN --mount=type=cache,target=/var/cache/apt,id=framework-runtime-python \
       python3-dev \
       python3-venv \
       pipx
-USER 8000
+USER 1000
 RUN pipx install poetry \
     && python3 -m venv $VIRTUAL_ENV
 
@@ -127,5 +127,5 @@ COPY --from=python . .
 COPY --from=r . .
 COPY --from=duckdb . .
 COPY --from=rust . .
-USER 8000:8000
+USER 1000:1000
 WORKDIR /project
