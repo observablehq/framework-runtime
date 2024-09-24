@@ -127,5 +127,5 @@ COPY --from=python . .
 COPY --from=r . .
 COPY --from=duckdb . .
 COPY --from=rust . .
-USER 8000:8000
+USER 8000
 WORKDIR /project
